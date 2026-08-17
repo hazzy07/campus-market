@@ -1,0 +1,88 @@
+## Assignment: *"CampusMart" — Inventory & Sales Analytics Engine*
+
+Build a small Python package that loads messy product/sales data, cleans it, analyses it, and produces a report. 
+*No external libraries* (no pandas/numpy) — only the standard library.
+
+### Input files (create these yourself)
+
+products.csv
+
+sku,name,category,unit_price,stock,perishable,expiry
+A100,Milk 1L,dairy,2.50,40,yes,2026-08-20
+A101,Bread,bakery,1.80,25,yes,2026-08-14
+B200,Notebook,stationery,3.00,120,no,
+B201,Pen,stationery,0.90,-5,no,
+C300,Cheese,dairy,abc,10,yes,2026-09-01
+
+
+sales.json
+json
+[
+ {"txn":"T1","sku":"A100","qty":3,"day":"Mon","customer":"c1"},
+ {"txn":"T2","sku":"B200","qty":2,"day":"Mon","customer":"c2"},
+ {"txn":"T3","sku":"Z999","qty":1,"day":"Tue","customer":"c1"}
+]
+
+
+### Required structure
+
+
+campusmart/
+  __init__.py
+  models.py
+  loaders.py
+  analytics.py
+  
+main.py
+
+
+### Part A — Models (OOP)
+1. Product with sku, name, category, unit_price, stock. Implement __repr__, __eq__ (by sku), __hash__ 
+(so products can go in a *set*), and a @property total_value returning unit_price * stock.
+2. Class attribute count tracking how many Product objects exist.
+3. Perishable(Product) adding expiry (a date) and overriding a method status() — base returns "OK"/"LOW" (stock < 10), 
+subclass also returns "EXPIRED" when past expiry.
+4. Custom exceptions: InvalidProductError, UnknownSKUError, both inheriting a base StoreError.
+models.py Required
+1: StoreError
+2: InvalidProductError
+3: UnknownSKUError
+4: Product
+5: Perishable
+
+### Part B — Loading (files, CSV/JSON, exceptions)
+5. load_products(path) returns dict[str, Product] keyed by SKU. It must *not crash* on the bad rows above: raise 
+InvalidProductError internally for a non-numeric price or negative stock, catch it, and append the reason to a rejects 
+list that is returned alongside the good data (as a *tuple* (products, rejects)).
+6. load_sales(path) must handle FileNotFoundError and json.JSONDecodeError gracefully, and raise UnknownSKUError for 
+SKUs absent from the catalogue — caught and logged, not fatal.
+7. Use with open(...) everywhere. Write all rejects to errors.log.
+
+### Part C — Analytics (comprehensions, lambda, map, filter)
+Each of these must be written as a *single expression* using a comprehension or map/filter/lambda — no explicit for 
+loop bodies:
+
+8. revenue_by_category(products, sales) → dict {category: revenue}.
+9. low_stock(products) → list of names where status() != "OK", sorted by stock ascending using a lambda key.
+10. repeat_customers(sales) → a *set* of customers who bought on more than one distinct day (hint: build {(customer, day)} tuples).
+11. price_list(products) → list of "NAME: $X.XX" strings built with map.
+12. top_n(pairs, n) → the n highest (key, value) tuples, using sorted(..., key=lambda ...).
+
+### Part D — Flexible reporting (*args / **kwargs)
+13. summarize(products, *fields, **filters):
+
+   - fields = which attributes to include in each output row.
+   - filters = attribute/value pairs, e.g. category="dairy", min_price=2.0.
+   - Must work for *any* combination, including summarize(products) with no arguments (defaults to all fields, no filtering).
+   - Example: summarize(products, "name", "unit_price", category="dairy")
+
+### Part E — CLI (I/O, loops, conditions)
+14. main.py runs a menu loop: 1) Report  2) Search by SKU  3) Add sale  4) Export JSON  5) Quit. Invalid input 
+re-prompts instead of crashing (try/except ValueError). Option 4 writes a summary to report.json.
+
+### Constraints
+- Every module needs a docstring; main.py must use if __name__ == "__main__":.
+- Not a single bare except: — catch specific exceptions.
+- Z999 in the sales file must appear in errors.log, not in the revenue totals.
+
+*Deliverable:* the package, the two data files, errors.log, and report.json from a sample run.

@@ -1,0 +1,5 @@
+[
+ {"txn":"T1","sku":"A100","qty":3,"day":"Mon","customer":"c1"},
+ {"txn":"T2","sku":"B200","qty":2,"day":"Mon","customer":"c2"},
+ {"txn":"T3","sku":"Z999","qty":1,"day":"Tue","customer":"c1"}
+]

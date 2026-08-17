@@ -1,0 +1,6 @@
+sku,name,category,unit_price,stock,perishable,expiry
+A100,Milk 1L,dairy,2.50,40,yes,2026-08-20
+A101,Bread,bakery,1.80,25,yes,2026-08-14
+B200,Notebook,stationery,3.00,120,no,
+B201,Pen,stationery,0.90,-5,no,
+C300,Cheese,dairy,abc,10,yes,2026-09-01
