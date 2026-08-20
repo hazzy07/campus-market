@@ -17,10 +17,9 @@ def load_products(path):
     with open(path, "r", newline="") as file:
           
         reader = csv.DictReader(file)
-
+        
         for row in reader:
 
-             
             try:
                 price= float(row['unit_price'])
                 stock= int(row['stock'])
@@ -57,6 +56,7 @@ def load_products(path):
                 )
                 rejects.append(message)
                 write_errors(message)
+
     return products, rejects
 
 

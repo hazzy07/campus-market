@@ -21,6 +21,7 @@ class Product:
         self.stock = int(stock)
         Product.count += 1
 
+
     def __repr__(self):
         return (
             f"Product({self.sku}, {self.name}, "

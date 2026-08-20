@@ -1,0 +1,2 @@
+# No external dependencies.
+# CampusMart uses Python standard library only.
